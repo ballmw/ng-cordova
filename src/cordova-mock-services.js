@@ -28,13 +28,27 @@ angular.module('cordova.services', [])
     .service("EventsService", function () {
         return {};
     })
-    .service("FileService", function () {
-        return {};
+    .service("FileService", function ($q) {
+        return {
+            read: function () {
+
+            },
+            write: function () {
+
+            }
+
+        }
+
+
     })
-    .service("GeolocationService", function () {
+    .service("GeolocationService", function ($q, $timeout) {
         return {
             promiseCurrentPosition: function () {
-
+                var deferred = $q.defer();
+                $timeout(function(){
+                    deferred.resolve({ coords: {longitude:1.23, latitude:3.14}})
+                },250);
+                return deferred.promise;
             },
             geolocation: {
                 watchPosition: function (callback) {
@@ -72,7 +86,7 @@ angular.module('cordova.services', [])
                 CAMERA: "CAMERA"
             }
         };
-        var pictures = ["img/1.jpg", "img/2.jpg", "img/3.jpg", "img/4.jpg", "img/5.jpg"];
+        var pictures = ["img/1.png", "img/2.png", "img/3.png", "img/4.png", "img/5.png"];
         var currentPicture = -1;
         var camera = {
             getPicture: function (success) {

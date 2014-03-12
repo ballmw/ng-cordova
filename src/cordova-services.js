@@ -130,8 +130,74 @@ angular.module('cordova.services', [])
 
         return service;
     }])
-    .service("FileService", function () {
-        return {};
+    .service("FileService", function ($q) {
+        return {
+            read: function (file) {
+
+                var deferred = $q.defer();
+
+                var fail = function (error) {
+                    console.log(error.code);
+                    deferred.reject(error);
+                };
+
+                var gotFS = function (fileSystem) {
+                    fileSystem.root.getFile(file, null, gotFileEntry, fail);
+                }
+
+                var gotFileEntry = function (fileEntry) {
+                    fileEntry.file(gotFile, fail);
+
+                }
+
+                function readAsText(file) {
+                    var reader = new FileReader();
+                    reader.onloadend = function (evt) {
+                        console.log("Read as text");
+                        console.log(evt.target.result);
+                        deferred.resolve(evt.target.result);
+                    };
+                    reader.readAsText(file);
+                };
+
+                function gotFile(file) {
+                    readAsText(file);
+                }
+
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+
+                return deferred.promise;
+            },
+            write: function (file, data) {
+
+                var deferred = $q.defer();
+
+                var fail = function (error) {
+                    console.log(error.code);
+                    deferred.reject(error);
+                };
+
+                var gotFS = function (fileSystem) {
+                    fileSystem.root.getFile(file, null, gotFileEntry, fail);
+                }
+
+                var gotFileEntry = function (fileEntry) {
+                    fileEntry.createWriter(win, fail);
+                }
+
+                function win(writer) {
+                    writer.onwrite = function (event) {
+                        console.log("write success:"+event);
+                        deferred.resolve(data);
+                    };
+                    writer.write(data);
+                };
+
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+
+                return deferred.promise;
+            }
+        };
     })
     .service("GeolocationService", ['$q', '$log', function ($q, $log) {
 
