@@ -5,20 +5,48 @@ module.exports = function (grunt) {
         clean: {
             temp: {
                 src: [
+                    '.temp'
+                ]
+            },
+            dist: {
+                src: [
                     'dist'
                 ]
             }
         },
+        concat:{
+            mocks: {
+                src: [
+                    'src/cordova-service-module.js',
+                    'src/mocks/*.js'
+                ],
+                dest: '.temp/dist-mocks.concat.js'
+            },
+            dist: {
+                src: [
+                    'src/*.js'
+                ],
+                dest: '.temp/dist.concat.js'
+            }
+        },
         ngmin: {
-            js: {
-                src: 'src/*.js',
-                dest: 'dist/*.js'
+            mocks: {
+                src: '.temp/dist-mocks.concat.js',
+                dest: '.temp/cordova-services-mocks.js'
+            },
+            dist: {
+                src: '.temp/dist.concat.js',
+                dest: '.temp/cordova-services.js'
             }
         },
         uglify: {
-            js: {
-                src: 'dist/*.js',
-                dest: 'dist.js'
+            mocks: {
+                src: '.temp/cordova-services-mocks.js',
+                dest: 'dist/cordova-services-mocks.min.js'
+            },
+            dist: {
+                src: '.temp/cordova-services.js',
+                dest: 'dist/cordova-services.min.js'
             }
         },
         karma: {
@@ -29,8 +57,18 @@ module.exports = function (grunt) {
         },
         watch: {
             karma: {
-                files: ['src/*.js', 'test/*.js'],
+                files: ['src/**/*.js', 'test/**/*.js'],
                 tasks: ['karma:unit:run']
+            }
+        },
+        replace: {
+            version: {
+                src: ['src/cordova-service-module.js'],
+                overwrite: true,                 // overwrite matched source files
+                replacements: [{
+                    from: '_VERSION_',
+                    to: '<%= pkg.version %>'
+                }]
             }
         }
     });
@@ -43,9 +81,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-text-replace');
 
-
-    grunt.registerTask("watcher", ["test"]);
-    grunt.registerTask("default", ["ngmin", "uglify"]);
+    grunt.registerTask("default", ["replace","karma", "clean:temp","clean:dist", "concat:mocks", "concat:dist", "ngmin:mocks", "ngmin:dist", "uglify:mocks", "uglify:dist"]);
 
 };
