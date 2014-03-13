@@ -3,4 +3,17 @@ The goal of this project is to wrap up the core cordova services so they are ava
 
 h2 Build
 
-gulp
+```
+npm install
+```
+
+```
+bower install
+```
+
+h2 Test
+
+Currently testing in Chrome so I can debug.
+```
+grunt karma
+```
