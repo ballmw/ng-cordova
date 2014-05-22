@@ -1,11 +1,11 @@
-h1 Hello!
+# Hello!
 The goal of this project is to wrap up the core cordova services so they are available in an Angular way.
 
-h2 Mocking
+## Mocking
 
 There will be 2 libraries.  A cordova runtime library and a set of mocks to use in the browser.
 
-h2 Build
+## Build
 
 ```
 npm install
@@ -19,14 +19,14 @@ bower install
 grunt dist
 ```
 
-h2 Test
+## Test
 
 Currently testing in Chrome so I can debug.
 ```
 grunt karma
 ```
 
-h2 Detecting mocks vs real
+## Detecting mocks vs real
 
 I'm open to suggestions here, but right now this is how I detect if I want to use my real or mock services.
 
