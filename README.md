@@ -1,3 +1,6 @@
+# You are at the wrong ng-cordova
+ This project is deprecated in favor of https://github.com/driftyco/ng-cordova
+ 
 # Hello!
 The goal of this project is to wrap up the core cordova services so they are available in an Angular way.
 
